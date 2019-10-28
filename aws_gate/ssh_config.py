@@ -22,11 +22,11 @@ PROXY_COMMAND = [
 @valid_aws_profile
 @valid_aws_region
 def ssh_config(
-    profile_name=AWS_DEFAULT_PROFILE,
-    region_name=AWS_DEFAULT_REGION,
-    user=DEFAULT_OS_USER,
-    port=DEFAULT_SSH_PORT,
-):
+    profile_name: str = AWS_DEFAULT_PROFILE,
+    region_name: str = AWS_DEFAULT_REGION,
+    user: str = DEFAULT_OS_USER,
+    port: int = DEFAULT_SSH_PORT,
+) -> None:
     config = OrderedDict(
         {
             "Host": "*.{}.{}".format(region_name, profile_name),

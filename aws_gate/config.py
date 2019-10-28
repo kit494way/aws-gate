@@ -1,6 +1,8 @@
 import logging
 import os
 
+from typing import List, Dict
+
 import yaml
 from marshmallow import Schema, fields, post_load, ValidationError
 from yaml.constructor import ConstructorError
@@ -16,17 +18,17 @@ class EmptyConfigurationError(Exception):
     pass
 
 
-def validate_profile(profile):
+def validate_profile(profile: str) -> None:
     if not is_existing_profile(profile):
         raise ValidationError("Invalid profile provided: {}".format(profile))
 
 
-def validate_region(region):
+def validate_region(region: str) -> None:
     if not is_existing_region(region):
         raise ValidationError("Invalid region name provided: {}".format(region))
 
 
-def validate_defaults(data):
+def validate_defaults(data: Dict[str, str]) -> None:
     schema = DefaultsSchema()
     schema.load(data)
 
@@ -80,14 +82,14 @@ class GateConfig:
             return self._defaults["profile"]
         return None
 
-    def get_host(self, name):
+    def get_host(self, name: str) -> Dict[str, str]:
         host = [host for host in self._hosts if host["alias"] == name]
         if host:
             return host[0]
         return {}
 
 
-def _locate_config_files():
+def _locate_config_files() -> List[str]:
     config_files = []
 
     if os.path.isdir(DEFAULT_GATE_CONFIGD_PATH):
@@ -131,7 +133,7 @@ def _merge_data(src, dst):
     return dst
 
 
-def load_config_from_files(config_files=None):
+def load_config_from_files(config_files=None) -> GateConfig:
     if config_files is None:
         config_files = _locate_config_files()
 

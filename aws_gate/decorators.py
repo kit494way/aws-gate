@@ -9,7 +9,7 @@ from aws_gate.utils import execute_plugin, is_existing_profile, is_existing_regi
 logger = logging.getLogger(__name__)
 
 
-def _plugin_exists(plugin_path):
+def _plugin_exists(plugin_path: str) -> bool:
     return os.path.exists(plugin_path)
 
 
@@ -23,7 +23,7 @@ def plugin_required(
     return wrapped_function(*args, **kwargs)
 
 
-def plugin_version(required_version):
+def plugin_version(required_version: str):
     @decorator
     def wrapper(
         wrapped_function, instance, args, kwargs

@@ -1,14 +1,16 @@
 import ipaddress
 import logging
+from typing import List, Dict, Union, Optional, Sequence
 
 import botocore.exceptions
+from botocore.client import BaseClient
 
 from aws_gate.exceptions import AWSConnectionError
 
 logger = logging.getLogger(__name__)
 
 
-def _is_valid_ip(ip):
+def _is_valid_ip(ip: str) -> bool:
     try:
         ipaddress.ip_address(ip)
     except ValueError:
@@ -16,7 +18,9 @@ def _is_valid_ip(ip):
     return True
 
 
-def _query_aws_api(filters, ec2=None):
+def _query_aws_api(
+    filters: List[Dict[str, Union[str, Sequence[str]]]], ec2: BaseClient = None
+) -> Optional[str]:
     ret = None
 
     # We are always interested only in running EC2 instances as we cannot
@@ -36,27 +40,27 @@ def _query_aws_api(filters, ec2=None):
     return ret
 
 
-def getinstanceidbyprivatednsname(name, ec2=None):
+def getinstanceidbyprivatednsname(name: str, ec2: BaseClient = None) -> Optional[str]:
     filters = [{"Name": "private-dns-name", "Values": [name]}]
     return _query_aws_api(filters=filters, ec2=ec2)
 
 
-def getinstanceidbydnsname(name, ec2=None):
+def getinstanceidbydnsname(name: str, ec2: BaseClient = None) -> Optional[str]:
     filters = [{"Name": "dns-name", "Values": [name]}]
     return _query_aws_api(filters=filters, ec2=ec2)
 
 
-def getinstanceidbyprivateipaddress(name, ec2=None):
+def getinstanceidbyprivateipaddress(name: str, ec2: BaseClient = None) -> Optional[str]:
     filters = [{"Name": "private-ip-address", "Values": [name]}]
     return _query_aws_api(filters=filters, ec2=ec2)
 
 
-def getinstanceidbyipaddress(name, ec2=None):
+def getinstanceidbyipaddress(name: str, ec2: BaseClient = None) -> Optional[str]:
     filters = [{"Name": "ip-address", "Values": [name]}]
     return _query_aws_api(filters=filters, ec2=ec2)
 
 
-def getinstanceidbytag(name, ec2=None):
+def getinstanceidbytag(name: str, ec2: BaseClient = None) -> Optional[str]:
     key, value = name.split(":")
 
     filters = [{"Name": "tag:{}".format(key), "Values": [value]}]
@@ -64,11 +68,11 @@ def getinstanceidbytag(name, ec2=None):
     return _query_aws_api(filters=filters, ec2=ec2)
 
 
-def getinstanceidbyinstancename(name, ec2=None):
+def getinstanceidbyinstancename(name: str, ec2: BaseClient = None) -> Optional[str]:
     return getinstanceidbytag("Name:{}".format(name), ec2=ec2)
 
 
-def query_instance(name, ec2=None):
+def query_instance(name: str, ec2: BaseClient = None) -> Optional[str]:
     if ec2 is None:
         raise ValueError("EC2 client is not initialized")
 

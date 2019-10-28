@@ -1,5 +1,6 @@
 import logging
 
+from aws_gate.config import GateConfig
 from aws_gate.constants import AWS_DEFAULT_PROFILE, AWS_DEFAULT_REGION
 from aws_gate.decorators import (
     plugin_version,
@@ -39,11 +40,11 @@ class SSMSession(BaseSession):
 @valid_aws_profile
 @valid_aws_region
 def session(
-    config,
-    instance_name,
-    profile_name=AWS_DEFAULT_PROFILE,
-    region_name=AWS_DEFAULT_REGION,
-):
+    config: GateConfig,
+    instance_name: str,
+    profile_name: str = AWS_DEFAULT_PROFILE,
+    region_name: str = AWS_DEFAULT_REGION,
+) -> None:
     instance, profile, region = fetch_instance_details_from_config(
         config, instance_name, profile_name, region_name
     )

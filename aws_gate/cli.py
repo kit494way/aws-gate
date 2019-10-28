@@ -8,7 +8,7 @@ from yaml.scanner import ScannerError
 
 from aws_gate import __version__, __description__
 from aws_gate.bootstrap import bootstrap
-from aws_gate.config import load_config_from_files
+from aws_gate.config import load_config_from_files, GateConfig
 from aws_gate.constants import (
     SUPPORTED_KEY_TYPES,
     DEBUG,
@@ -28,14 +28,14 @@ from aws_gate.utils import get_default_region
 logger = logging.getLogger(__name__)
 
 
-def _get_profile(args, config, default):
+def _get_profile(args, config: GateConfig, default: str) -> str:
     profile = None
     if hasattr(args, "profile"):
         profile = args.profile
     return profile or config.default_profile or default
 
 
-def _get_region(args, config, default):
+def _get_region(args, config: GateConfig, default: str) -> str:
     region = None
     if hasattr(args, "region"):
         region = args.region
@@ -119,7 +119,7 @@ def parse_arguments():
     return args
 
 
-def main():
+def main() -> None:
     # We want to provide default values in cases they are not configured
     # in ~/.aws/config or availabe a environment variables
     default_region = get_default_region()

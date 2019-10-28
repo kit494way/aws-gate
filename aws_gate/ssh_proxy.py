@@ -1,5 +1,6 @@
 import logging
 
+from aws_gate.config import GateConfig
 from aws_gate.constants import (
     AWS_DEFAULT_PROFILE,
     AWS_DEFAULT_REGION,
@@ -56,15 +57,15 @@ class SshProxySession(BaseSession):
 @valid_aws_profile
 @valid_aws_region
 def ssh_proxy(
-    config,
-    instance_name,
-    user=DEFAULT_OS_USER,
-    port=DEFAULT_SSH_PORT,
-    key_type=DEFAULT_KEY_ALGORITHM,
-    key_size=DEFAULT_KEY_SIZE,
-    profile_name=AWS_DEFAULT_PROFILE,
-    region_name=AWS_DEFAULT_REGION,
-):
+    config: GateConfig,
+    instance_name: str,
+    user: str = DEFAULT_OS_USER,
+    port: int = DEFAULT_SSH_PORT,
+    key_type: str = DEFAULT_KEY_ALGORITHM,
+    key_size: int = DEFAULT_KEY_SIZE,
+    profile_name: str = AWS_DEFAULT_PROFILE,
+    region_name: str = AWS_DEFAULT_REGION,
+) -> None:
     instance, profile, region = fetch_instance_details_from_config(
         config, instance_name, profile_name, region_name
     )
